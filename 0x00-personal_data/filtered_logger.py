@@ -61,4 +61,25 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
             )
 
 def main() -> None:
+    """connect to db, retrieve all rows and display
+    each row under a filtered format"""
+    filtered_fields = "name,email,phone,ssn,password,ip,last_login,user_agent"
+    cols = filtered_fields.split(',')
+    sqlQuery = f'SELECT {filtered_fields} FROM users;'
+    logger = get_logger()
+    db_connect = get_db()
+    with db_connect.cursor() as cursor:
+        rows = cursor.execute(sqlQuery).fetchall()
+        for row in rows:
+            eachRecord = map(
+                    lambda x: f'{x[0]}={x[1]}', zip(cols, row))
+            msg = '{};'.format('; '.join(list(eachRecord))
+            args = ("user_data", logging.INFO, None, None, msg, None, None)
+            log_record = logging.LogRecord(*args)
+            logger.handle(log_record)
+
+
+if __name__ == '__main__':
+    main()
+
 
