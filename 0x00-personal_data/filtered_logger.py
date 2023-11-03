@@ -38,16 +38,16 @@ class RedactingFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """filter values in incoming log records"""
         message = super(RedactingFormatter, self).format(record)
-        return filter_datum(
-                self.fields, self.REDACTION, message, self.SEPARATOR)
+        output = filter_datum(self.fields, self.REDACTION, message, self.SEPARATOR)
+        return output
 
 
 def get_logger() -> logging.Logger:
     """Create new customized logger i.e logging.Logger object"""
     newLogger = logging.getLogger("user_data")
-    newLogger.setLevel(logging.INFO)
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(RedactingFormatter(PII_FIELDS))
+    newLogger.setLevel(logging.INFO)
     newLogger.propagate = False
     newLogger.addHandler(stream_handler)
     return newLogger
@@ -55,18 +55,19 @@ def get_logger() -> logging.Logger:
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """Connect to database and return its connector"""
-    db_name = getenv("PERSONAL_DATA_DB_NAME", "")
     db_host = getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    db_name = getenv("PERSONAL_DATA_DB_NAME", "")
     db_user = getenv("PERSONAL_DATA_DB_USERNAME", "root")
     db_pass = getenv("PERSONAL_DATA_DB_PASSWORD", "")
 
-    return mysql.connector.connect(
+    connection = mysql.connector.connect(
             host=db_host,
             port=3306,
             user=db_user,
             password=db_pass,
             database=db_name
-            )
+    )
+    return connection
 
 
 def main() -> None:
