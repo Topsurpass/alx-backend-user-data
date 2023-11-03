@@ -10,7 +10,7 @@ def hash_password(password: str) -> bytes:
     string"""
     """"Hash a password for the first time, with a
     randomly-generated salt"""
-    return bcrypt.hashpw(password.encode('utf-8'), bycrypt.gensalt())
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
 
 def is_valid(hashed_password: bytes, password: str) -> bool:

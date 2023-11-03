@@ -41,6 +41,7 @@ class RedactingFormatter(logging.Formatter):
         return filter_datum(
                 self.fields, self.REDACTION, message, self.SEPARATOR)
 
+
 def get_logger() -> logging.Logger:
     """Create new customized logger i.e logging.Logger object"""
     newLogger = logging.getLogger("user_data")
@@ -67,6 +68,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
             database=db_name
             )
 
+
 def main() -> None:
     """connect to db, retrieve all rows and display
     each row under a filtered format"""
@@ -76,11 +78,12 @@ def main() -> None:
     logger = get_logger()
     db_connect = get_db()
     with db_connect.cursor() as cursor:
-        rows = cursor.execute(sqlQuery).fetchall()
+        cursor.execute(sqlQuery)
+        rows = cursor.fetchall()
         for row in rows:
             eachRecord = map(
                     lambda x: f'{x[0]}={x[1]}', zip(cols, row))
-            msg = '{};'.format('; '.join(list(eachRecord))
+            msg = '{};'.format('; '.join(list(eachRecord)))
             args = ("user_data", logging.INFO, None, None, msg, None, None)
             log_record = logging.LogRecord(*args)
             logger.handle(log_record)
