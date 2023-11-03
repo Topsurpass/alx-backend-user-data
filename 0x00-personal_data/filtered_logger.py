@@ -8,6 +8,7 @@ import re
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
+
 def filter_datum(
         fields: List[str], redaction: str, message: str, separator: str):
     """Return log message obfuscated"""
@@ -33,6 +34,7 @@ class RedactingFormatter(logging.Formatter):
         message = super(RedactingFormatter, self).format(record)
         return filter_datum(
                 self.fields, self.REDACTION, message, self.SEPARATOR)
+
 
 def get_logger() -> logging.Logger:
     """Create new customized logger i.e logging.Logger object"""
@@ -60,6 +62,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
             database=db_name
             )
 
+
 def main() -> None:
     """connect to db, retrieve all rows and display
     each row under a filtered format"""
@@ -69,11 +72,12 @@ def main() -> None:
     logger = get_logger()
     db_connect = get_db()
     with db_connect.cursor() as cursor:
-        rows = cursor.execute(sqlQuery).fetchall()
+        cursor.execute(sqlQuery)
+        rows = cursor.fetchall()
         for row in rows:
             eachRecord = map(
                     lambda x: f'{x[0]}={x[1]}', zip(cols, row))
-            msg = '{};'.format('; '.join(list(eachRecord))
+            msg = '{};'.format('; '.join(list(eachRecord)))
             args = ("user_data", logging.INFO, None, None, msg, None, None)
             log_record = logging.LogRecord(*args)
             logger.handle(log_record)
@@ -81,5 +85,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-
-
