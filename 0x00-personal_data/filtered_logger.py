@@ -2,7 +2,7 @@
 
 from typing import List
 import logging
-from os import getenv
+import os
 import mysql.connector
 import re
 
@@ -16,16 +16,13 @@ PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 def filter_datum(
         fields: List[str], redaction: str, message: str, separator: str,
         ) -> str:
-    """Filters a log line.
-    """
+    """return log messages obfuscated"""
     extract, replace = (patterns["extract"], patterns["replace"])
     return re.sub(extract(fields, separator), replace(redaction), message)
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class
-        """
-
+    """ Redacting Formatter class"""
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
@@ -38,8 +35,8 @@ class RedactingFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """filter values in incoming log records"""
         message = super(RedactingFormatter, self).format(record)
-        output = filter_datum(self.fields, self.REDACTION, message, self.SEPARATOR)
-        return output
+        return filter_datum(
+                self.fields, self.REDACTION, message, self.SEPARATOR)
 
 
 def get_logger() -> logging.Logger:
@@ -55,10 +52,10 @@ def get_logger() -> logging.Logger:
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """Connect to database and return its connector"""
-    db_host = getenv("PERSONAL_DATA_DB_HOST", "localhost")
-    db_name = getenv("PERSONAL_DATA_DB_NAME", "")
-    db_user = getenv("PERSONAL_DATA_DB_USERNAME", "root")
-    db_pass = getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    db_host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    db_name = os.getenv("PERSONAL_DATA_DB_NAME", "")
+    db_user = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    db_pass = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
 
     connection = mysql.connector.connect(
             host=db_host,
