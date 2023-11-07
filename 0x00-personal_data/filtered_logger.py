@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""This module contains methods of keeping personal
+information safe and also encryption of them before storage"""
 
 from typing import List
 import logging
