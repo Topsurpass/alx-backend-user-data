@@ -22,7 +22,6 @@ class SessionDBAuth(SessionExpAuth):
             new_user = UserSession(**dic)
             new_user.save()
             return session_id
-        return None
 
     def user_id_for_session_id(self, session_id=None):
         """Overloads this in the base class. Search the db for User ID
