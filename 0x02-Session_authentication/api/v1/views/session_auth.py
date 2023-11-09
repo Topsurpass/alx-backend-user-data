@@ -1,4 +1,4 @@
-#!/usr/bin/env pthon3
+#!/usr/bin/env python3
 """Handles all routes for the Session authentication."""
 
 from flask import abort, jsonify, request
