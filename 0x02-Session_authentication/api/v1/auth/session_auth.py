@@ -3,6 +3,7 @@
 from api.v1.auth.auth import Auth
 from models.user import User
 import uuid
+from flask import request
 
 
 class SessionAuth(Auth):
@@ -11,25 +12,18 @@ class SessionAuth(Auth):
 
     def create_session(self, user_id: str = None) -> str:
         """Create session id for a user_id"""
-        if user_id:
-            if type(user_id) is str:
-                s_id = str(uuid.uuid4())
-                """key = session_id, value = user_id; This is
-                done so that a user can have multiple session id"""
-                self.user_id_by_session_id[s_id] = user_id
-                return s_id
-            else:
-                None
-        return None
+        if type(user_id) is str:
+            s_id = str(uuid.uuid4())
+            """key = session_id, value = user_id; This is
+            done so that a user can have multiple session id"""
+            self.user_id_by_session_id[s_id] = user_id
+            return s_id
 
     def user_id_for_session_id(self, session_id: str = None) -> str:
         """Return User ID based on Session ID"""
         if session_id:
             if type(session_id) is str:
                 return self.user_id_by_session_id.get(session_id)
-            else:
-                return None
-        return None
 
     def current_user(self, request=None):
         """Return User instance based on a cookie value"""

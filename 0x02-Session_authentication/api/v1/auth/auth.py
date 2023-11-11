@@ -46,7 +46,4 @@ class Auth:
         """Return cookie value from a requst"""
         if request:
             cookie_name = os.getenv('SESSION_NAME')
-            if cookie_name:
-                cookie_value = request.cookies.get(cookie_name)
-                return cookie_value
-        return None
+            return request.cookies.get(cookie_name)
