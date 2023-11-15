@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""The user model's module that maps each User
+object created to a table in db using sqlalchemy,
+am ORM"""
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
 
