@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """DB module.
 The Base is what all classes inherit from and this helps to
 create all the tables defined in them.
@@ -10,7 +11,6 @@ from sqlalchemy import create_engine, tuple_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from typing import TypeVar
 from user import Base, User
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
@@ -36,7 +36,7 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str) -> TypeVar('User'):
+    def add_user(self, email: str, hashed_password: str) -> User:
         """Add / save new user to the database"""
         newUser = User(email=email, hashed_password=hashed_password)
         session = self._session
@@ -44,7 +44,7 @@ class DB:
         session.commit()
         return newUser
 
-    def find_user_by(self, **kwargs) -> TypeVar('User'):
+    def find_user_by(self, **kwargs) -> User:
         """returns the first row found in the users table as
         filtered by the method’s input arguments"""
         columns, values = [], []

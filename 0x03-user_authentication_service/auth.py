@@ -31,7 +31,7 @@ class Auth:
     def __init__(self):
         self._db = DB()
 
-    def register_user(self, email: str, password: str) -> TypeVar('User'):
+    def register_user(self, email: str, password: str) -> User:
         """Register user and save to the database"""
         try:
             user = self._db.find_user_by(email=email)
@@ -63,7 +63,7 @@ class Auth:
             return None
 
     def get_user_from_session_id(
-            self, session_id: str) -> Union[TypeVar('User'), None]:
+            self, session_id: str) -> Union[User, None]:
         """Try get a user using session id rather than
         needing to input email and password for reverification"""
         if not session_id:
