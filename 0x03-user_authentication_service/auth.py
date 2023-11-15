@@ -6,6 +6,7 @@ from db import DB
 from typing import TypeVar
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
+from user import User
 from typing import TypeVar, Union
 
 
@@ -20,7 +21,7 @@ def is_valid(hashed_password: bytes, password: str) -> bool:
     return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
 
 
-def _generate_uuid():
+def _generate_uuid() -> str:
     """Generate unique id"""
     return str(uuid4())
 
